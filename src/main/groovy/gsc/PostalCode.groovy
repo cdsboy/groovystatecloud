@@ -6,5 +6,5 @@ class PostalCode {
   Float latitude
   Float longitude
   Integer countyCode
-  Integer countyName
+  String countyName
 }

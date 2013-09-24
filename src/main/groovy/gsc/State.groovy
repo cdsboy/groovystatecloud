@@ -9,23 +9,23 @@ class State {
   List postalCodes
 
   State(InputStream xmlStream) {
-    def geonames = new XmlParser().parase(xmlStream)
+    def geonames = new XmlParser().parse(xmlStream)
 
-    totalCount = geonames.totalResultsCount.text()
+    totalCount = geonames.totalResultsCount.text().toInteger()
 
     def firstCode = geonames.code[0]
     code = firstCode.adminCode1.text()
     name = firstCode.adminName1.text()
     countryCode = firstCode.countryCode.text()
     
-    postalCode = []
+    postalCodes = []
     geonames.code.findAll{
-      postalCode = new PostalCode()
-      postalCode.code = it.postcalcode.text()
+      def postalCode = new PostalCode()
+      postalCode.code = it.postalcode.text().toInteger()
       postalCode.name = it.name.text()
-      postalCode.latitude = it.lat.text()
-      postalCode.longitude = it.lng.text()
-      postalCode.countyCode = it.adminCode2.text()
+      postalCode.latitude = it.lat.text().toFloat()
+      postalCode.longitude = it.lng.text().toFloat()
+      postalCode.countyCode = it.adminCode2.text().toInteger()
       postalCode.countyName = it.adminName2.text()
       
       postalCodes.add(postalCode)
