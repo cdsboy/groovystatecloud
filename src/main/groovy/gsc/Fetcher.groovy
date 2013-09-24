@@ -77,10 +77,9 @@ class Fetcher {
                         ['Rhode Island', 'US-RI'], ['South Carolina', 'US-SC'],
                         ['South Dakota', 'US-SD'], ['Tennessee', 'US-TN'],
                         ['Texas', 'US-TX'], ['Utah', 'US-UT'],
-                        ['Vermont', 'US-VT'], ['Virgin Island', 'US-VI'],
-                        ['Virginia', 'US-VA'], ['Washington', 'US-WA'],
-                        ['West Virginia', 'US-WV'], ['Wisconsin', 'US-WI'],
-                        ['Wyoming', 'US-WY']]
+                        ['Vermont', 'US-VT'], ['Virginia', 'US-VA'],
+                        ['Washington', 'US-WA'], ['West Virginia', 'US-WV'],
+                        ['Wisconsin', 'US-WI'], ['Wyoming', 'US-WY']]
 
     def states = []
     for (stateCode in stateCodes) {
