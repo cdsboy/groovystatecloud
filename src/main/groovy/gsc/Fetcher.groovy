@@ -5,6 +5,13 @@ import gsc.State
 import gsc.PostalCode
 
 class Fetcher {
+  def purge() {
+    def sql = Sql.newInstance('jdbc:sqlite:database.sqlite', 'org.sqlite.JDBC')
+
+    sql.execute("DROP TABLE postalcodes")
+    sql.execute("DROP TABLE states")
+  }
+
   def scrape_or_run() {
     println "scrape_or_run"
     def sql = Sql.newInstance('jdbc:sqlite:database.sqlite', 'org.sqlite.JDBC')
@@ -21,7 +28,7 @@ class Fetcher {
 
       println "creating tables"
       sql.execute("CREATE TABLE states(id INTEGER PRIMARY KEY, code TEXT, name TEXT, countrycode TEXT, totalcount INTEGER)")
-      sql.execute("CREATE table postalcodes(stateid INTEGER, code INTEGER, name TEXT, lat FLOAT, long FLOAT, countycode INTEGER, countyname TEXT, FOREIGN KEY(stateid) REFERENCES states(id))")
+      sql.execute("CREATE TABLE postalcodes(stateid INTEGER, code INTEGER, name TEXT, lat FLOAT, long FLOAT, countycode INTEGER, countyname TEXT, FOREIGN KEY(stateid) REFERENCES states(id))")
     
       println "inserting states"
       for (state in states) {
@@ -42,11 +49,11 @@ class Fetcher {
       }
     } else {
       states = []
-      sql.eachRow('SELECT * FROM states ORDERED BY name') { row ->
-        def state = new State(row[1], row[2], row[3], row[4], row[5])
+      sql.eachRow('SELECT * FROM states ORDER BY name ASC') { row ->
+        def state = new State(row[1], row[2], row[3], row[4])
         sql.eachRow('SELECT * FROM postalcodes WHERE stateid = ?', [row[0]]) { prow ->
-          def postalCode = new PostalCode(row[1], row[2], row[3], row[4],
-                                          row[5], row[6])
+          def postalCode = new PostalCode(prow[1], prow[2], prow[3], prow[4],
+                                          prow[5], prow[6])
           state.postalCodes.add(postalCode)
         }
         states.add(state)
