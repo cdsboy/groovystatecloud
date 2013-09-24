@@ -8,16 +8,15 @@ class State {
   Integer totalCount
   List postalCodes
 
-  State(InputStream xmlStream) {
+  State(xmlStream, stateName, stateCode) {
     def geonames = new XmlParser().parse(xmlStream)
 
     totalCount = geonames.totalResultsCount.text().toInteger()
-
-    def firstCode = geonames.code[0]
-    code = firstCode.adminCode1.text()
-    name = firstCode.adminName1.text()
-    countryCode = firstCode.countryCode.text()
     
+    name = stateName
+    code = stateCode
+    countryCode = "US"
+
     postalCodes = []
     geonames.code.findAll{
       def postalCode = new PostalCode()
@@ -30,5 +29,13 @@ class State {
       
       postalCodes.add(postalCode)
     }
+  }
+
+  State(c, n, cc, t) {
+    code = n
+    name = n
+    countryCode = cc
+    totalCount = t
+    postalCodes = []
   }
 }
