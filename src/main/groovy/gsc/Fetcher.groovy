@@ -23,14 +23,12 @@ class Fetcher {
     if (!tables.next()) {
       println "scraping"
       states = scrape()
-      println "done scraping"
       states.sort{a,b -> b.name<=>a.name}
 
-      println "creating tables"
       sql.execute("CREATE TABLE states(id INTEGER PRIMARY KEY, code TEXT, name TEXT, countrycode TEXT, totalcount INTEGER)")
       sql.execute("CREATE TABLE postalcodes(stateid INTEGER, code INTEGER, name TEXT, lat FLOAT, long FLOAT, countycode INTEGER, countyname TEXT, FOREIGN KEY(stateid) REFERENCES states(id))")
     
-      println "inserting states"
+      println "saving data"
       for (state in states) {
         println state.name
         sql.execute("INSERT INTO states(code, name, countrycode, totalcount) VALUES(?, ?, ?, ?)",
@@ -59,6 +57,7 @@ class Fetcher {
         states.add(state)
       }
     }
+    return states
   }
 
   def scrape() {
