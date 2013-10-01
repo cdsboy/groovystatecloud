@@ -13,7 +13,6 @@ class Fetcher {
   }
 
   def scrape_or_run() {
-    println "scrape_or_run"
     def sql = Sql.newInstance('jdbc:sqlite:database.sqlite', 'org.sqlite.JDBC')
 
     def metadata = sql.connection.getMetaData()
@@ -21,16 +20,13 @@ class Fetcher {
 
     def states
     if (!tables.next()) {
-      println "scraping"
       states = scrape()
       states.sort{a,b -> b.name<=>a.name}
 
       sql.execute("CREATE TABLE states(id INTEGER PRIMARY KEY, code TEXT, name TEXT, countrycode TEXT, totalcount INTEGER)")
       sql.execute("CREATE TABLE postalcodes(stateid INTEGER, code INTEGER, name TEXT, lat FLOAT, long FLOAT, countycode INTEGER, countyname TEXT, FOREIGN KEY(stateid) REFERENCES states(id))")
     
-      println "saving data"
       for (state in states) {
-        println state.name
         sql.execute("INSERT INTO states(code, name, countrycode, totalcount) VALUES(?, ?, ?, ?)",
                     [state.code, state.name, state.countryCode, state.totalCount])
 
