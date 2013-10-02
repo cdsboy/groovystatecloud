@@ -10,12 +10,20 @@
         size: {start: 14, end: 18, unit: 'pt'},
         color: {start: '#cde', end: '#f52'}
       };
-      $.ajax('/groovystatecloud/cloud/getList').done(function(data) {
-        $.each(data, function(index, value) {
-          $("#cloud").append('<span rel="' + value[1] + '">' + value[0] + ' </span>');
+      function fetch() {
+        $.ajax('/groovystatecloud/cloud/getList').done(function(data) {
+          $.each(data, function(index, value) {
+            $("#cloud").append('<span rel="' + value[1] + '">' + value[0] + ' </span>');
+          });
+          $("#cloud span").tagcloud();
         });
-        $("#cloud span").tagcloud();
+      }
+      $("#purge").click(function() {
+        $("#cloud").empty();
+        $.ajax('/groovystatecloud/cloud/purge');
       });
+      $("#fetch").click(function() { fetch() });
+      fetch();
     });
    </script>
    <style>
